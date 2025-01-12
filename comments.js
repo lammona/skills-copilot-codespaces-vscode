@@ -1,45 +1,33 @@
-//create web server
+//Create web server
+const express = require('express');
+const app = express();
+const port = 3000;
 
-
-var http = require('http');
-var fs = require('fs');
-var url = require('url');
-var qs = require('querystring');
-var comments = [];
-
-var server = http.createServer(function (req, res) {
-    var parseUrl = url.parse(req.url, true);
-    var pathName = parseUrl.pathname;
-    if (pathName === '/') {
-        fs.readFile('./index.html', function (err, data) {
-            if (err) {
-                console.log(err);
-                res.end('404 Not Found');
-            } else {
-                res.writeHead(200, { 'Content-Type': 'text/html' });
-                res.end(data);
-            }
-        });
-    } else if (pathName === '/comments') {
-        if (req.method === 'GET') {
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(comments));
-        } else if (req.method === 'POST') {
-            var postData = '';
-            req.on('data', function (chunk) {
-                postData += chunk;
-            });
-            req.on('end', function () {
-                var comment = qs.parse(postData);
-                comments.push(comment);
-                res.end(JSON.stringify(comment));
-            });
-        }
-    } else {
-        res.end('404 Not Found');
-    }
+// Create a new comment
+app.post('/comments', (req, res) => {
+  res.send('Create a new comment');
 });
 
-server.listen(8080, function () {
-    console.log('server is running...');
+// Get all comments
+app.get('/comments', (req, res) => {
+  res.send('Get all comments');
+});
+
+// Get a comment by ID
+app.get('/comments/:id', (req, res) => {
+  res.send('Get a comment by ID');
+});
+
+// Update a comment by ID
+app.put('/comments/:id', (req, res) => {
+  res.send('Update a comment by ID');
+});
+
+// Delete a comment by ID
+app.delete('/comments/:id', (req, res) => {
+  res.send('Delete a comment by ID');
+});
+
+app.listen(port, () => {
+  console.log(`Server listening at http://localhost:${port}`);
 });
